@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,13 +14,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import com.example.upialerts.data.AppPreferences
+import com.example.upialerts.ui.theme.BicubikFont
+import kotlinx.coroutines.launch
+import com.example.upialerts.service.PaymentNotificationListener
 
 @Composable
 fun DrawerContent(
     onThemeChange: (Boolean) -> Unit,
     onDrawerClose: () -> Unit,
-    isDarkTheme: Boolean
+    isDarkTheme: Boolean,
+    appPreferences: AppPreferences
 ) {
+    var showTokenDialog by remember { mutableStateOf(false) }
+    var showLogScreen by remember { mutableStateOf(false) }
+    var currentToken by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+
+    // Collect saved token
+    LaunchedEffect(Unit) {
+        appPreferences.apiToken.collect { token ->
+            currentToken = token
+        }
+    }
+
+    TokenDialog(
+        showDialog = showTokenDialog,
+        currentToken = currentToken,
+        onDismiss = { showTokenDialog = false },
+        onSave = { token ->
+            currentToken = token
+            scope.launch {
+                appPreferences.saveApiToken(token)
+                PaymentNotificationListener.updateToken(token)
+            }
+        }
+    )
+
+    if (showLogScreen) {
+        LogScreen(onClose = { showLogScreen = false })
+    }
+
     Surface(
         modifier = Modifier.fillMaxHeight(),
         color = MaterialTheme.colorScheme.surface
@@ -32,20 +67,23 @@ fun DrawerContent(
         ) {
             // App Name in drawer header with matching top app bar height
             Box(
-                modifier = Modifier.height(64.dp),
-                contentAlignment = Alignment.CenterStart
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Donation Tracker",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    fontFamily = FontFamily.SansSerif
+                    text = "UPI ALERTS",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontFamily = BicubikFont
+                    ),
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-            
-            Divider()
+
+            HorizontalDivider()
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -65,7 +103,7 @@ fun DrawerContent(
                 },
                 selected = false,
                 onClick = { 
-                    /* TODO: Implement token management */ 
+                    showTokenDialog = true
                     onDrawerClose()
                 },
                 modifier = Modifier.padding(horizontal = 12.dp)
@@ -88,6 +126,28 @@ fun DrawerContent(
                 },
                 selected = false,
                 onClick = { onThemeChange(!isDarkTheme) },
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+
+            // Add Log Button
+            NavigationDrawerItem(
+                icon = { 
+                    Icon(
+                        imageVector = Icons.Default.List,
+                        contentDescription = "View Logs"
+                    )
+                },
+                label = { 
+                    Text(
+                        text = "View Logs",
+                        fontFamily = FontFamily.SansSerif
+                    )
+                },
+                selected = false,
+                onClick = { 
+                    showLogScreen = true
+                    onDrawerClose()
+                },
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
         }
