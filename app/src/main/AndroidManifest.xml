@@ -48,8 +48,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="flowfund"
-                    android:host="oauth" />
+                    android:scheme="https"
+                    android:host="github.com"
+                    android:pathPattern="/0x8t" />
             </intent-filter>
         </activity>
     </application>

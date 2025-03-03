@@ -45,6 +45,7 @@ android {
     
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -104,5 +105,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso)
+    
+    // Compose Testing - Updated declarations
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
