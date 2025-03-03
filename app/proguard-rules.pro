@@ -21,13 +21,13 @@
 #-renamesourcefileattribute SourceFile
 
 # Keep your application class
--keep class com.example.upialerts.** { *; }
+-keep class com.zero.flowfund.** { *; }
 
 # Keep notification service
--keep class com.example.upialerts.service.PaymentNotificationListener { *; }
+-keep class com.zero.flowfund.service.PaymentNotificationListener { *; }
 
 # Keep API models
--keep class com.example.upialerts.data.** { *; }
+-keep class com.zero.flowfund.data.** { *; }
 
 # OkHttp rules
 -dontwarn okhttp3.**
@@ -80,13 +80,13 @@
 -keep class androidx.compose.material3.** { *; }
 
 # Keep PaymentNotification and related classes
--keep class com.example.upialerts.data.PaymentNotification { *; }
--keep class com.example.upialerts.data.AlertLog { *; }
--keep class com.example.upialerts.data.LogManager { *; }
--keep class com.example.upialerts.data.AppPreferences { *; }
+-keep class com.zero.flowfund.data.PaymentNotification { *; }
+-keep class com.zero.flowfund.data.AlertLog { *; }
+-keep class com.zero.flowfund.data.LogManager { *; }
+-keep class com.zero.flowfund.data.AppPreferences { *; }
 
 # Keep API related classes
--keep class com.example.upialerts.api.AlertsApi { *; }
+-keep class com.zero.flowfund.api.AlertsApi { *; }
 -keep class org.json.JSONObject { *; }
 -keep class org.json.JSONArray { *; }
 
